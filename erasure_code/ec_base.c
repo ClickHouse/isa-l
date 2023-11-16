@@ -44,7 +44,7 @@ void ec_init_tables(int k, int rows, unsigned char *a, unsigned char *g_tbls)
 	}
 }
 
-unsigned char gf_mul(unsigned char a, unsigned char b)
+unsigned char gf_mul_isal(unsigned char a, unsigned char b)
 {
 #ifndef GF_LARGE_TABLES
 	int i;
@@ -83,9 +83,9 @@ void gf_gen_rs_matrix(unsigned char *a, int m, int k)
 		p = 1;
 		for (j = 0; j < k; j++) {
 			a[k * i + j] = p;
-			p = gf_mul(p, gen);
+			p = gf_mul_isal(p, gen);
 		}
-		gen = gf_mul(gen, 2);
+		gen = gf_mul_isal(gen, 2);
 	}
 }
 
@@ -144,8 +144,8 @@ int gf_invert_matrix(unsigned char *in_mat, unsigned char *out_mat, const int n)
 
 		temp = gf_inv(in_mat[i * n + i]);	// 1/pivot
 		for (j = 0; j < n; j++) {	// Scale row i by 1/pivot
-			in_mat[i * n + j] = gf_mul(in_mat[i * n + j], temp);
-			out_mat[i * n + j] = gf_mul(out_mat[i * n + j], temp);
+			in_mat[i * n + j] = gf_mul_isal(in_mat[i * n + j], temp);
+			out_mat[i * n + j] = gf_mul_isal(out_mat[i * n + j], temp);
 		}
 
 		for (j = 0; j < n; j++) {
@@ -154,8 +154,8 @@ int gf_invert_matrix(unsigned char *in_mat, unsigned char *out_mat, const int n)
 
 			temp = in_mat[j * n + i];
 			for (k = 0; k < n; k++) {
-				out_mat[j * n + k] ^= gf_mul(temp, out_mat[i * n + k]);
-				in_mat[j * n + k] ^= gf_mul(temp, in_mat[i * n + k]);
+				out_mat[j * n + k] ^= gf_mul_isal(temp, out_mat[i * n + k]);
+				in_mat[j * n + k] ^= gf_mul_isal(temp, in_mat[i * n + k]);
 			}
 		}
 	}
@@ -280,7 +280,7 @@ void gf_vect_dot_prod_base(int len, int vlen, unsigned char *v,
 	for (i = 0; i < len; i++) {
 		s = 0;
 		for (j = 0; j < vlen; j++)
-			s ^= gf_mul(src[j][i], v[j * 32 + 1]);
+			s ^= gf_mul_isal(src[j][i], v[j * 32 + 1]);
 
 		dest[i] = s;
 	}
@@ -293,7 +293,7 @@ void gf_vect_mad_base(int len, int vec, int vec_i,
 	unsigned char s;
 	for (i = 0; i < len; i++) {
 		s = dest[i];
-		s ^= gf_mul(src[i], v[vec_i * 32 + 1]);
+		s ^= gf_mul_isal(src[i], v[vec_i * 32 + 1]);
 		dest[i] = s;
 	}
 }
@@ -308,7 +308,7 @@ void ec_encode_data_base(int len, int srcs, int dests, unsigned char *v,
 		for (i = 0; i < len; i++) {
 			s = 0;
 			for (j = 0; j < srcs; j++)
-				s ^= gf_mul(src[j][i], v[j * 32 + l * srcs * 32 + 1]);
+				s ^= gf_mul_isal(src[j][i], v[j * 32 + l * srcs * 32 + 1]);
 
 			dest[l][i] = s;
 		}
@@ -324,7 +324,7 @@ void ec_encode_data_update_base(int len, int k, int rows, int vec_i, unsigned ch
 	for (l = 0; l < rows; l++) {
 		for (i = 0; i < len; i++) {
 			s = dest[l][i];
-			s ^= gf_mul(data[i], v[vec_i * 32 + l * k * 32 + 1]);
+			s ^= gf_mul_isal(data[i], v[vec_i * 32 + l * k * 32 + 1]);
 
 			dest[l][i] = s;
 		}
@@ -342,6 +342,6 @@ int gf_vect_mul_base(int len, unsigned char *a, unsigned char *src, unsigned cha
 	}
 
 	while (len-- > 0)
-		*dest++ = gf_mul(c, *src++);
+		*dest++ = gf_mul_isal(c, *src++);
 	return 0;
 }

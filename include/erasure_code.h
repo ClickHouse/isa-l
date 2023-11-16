@@ -871,7 +871,7 @@ void gf_6vect_mad_avx2(int len, int vec, int vec_i, unsigned char *gftbls, unsig
  * @returns  Product of a and b in GF(2^8)
  */
 
-unsigned char gf_mul(unsigned char a, unsigned char b);
+unsigned char gf_mul_isal(unsigned char a, unsigned char b);
 
 /**
  * @brief Single element GF(2^8) inverse.

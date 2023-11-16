@@ -7,7 +7,7 @@ ec_init_tables          @2
 gf_gen_cauchy1_matrix   @3
 gf_gen_rs_matrix        @4
 gf_invert_matrix        @5
-gf_mul                  @6
+gf_mul_isal             @6
 gf_vect_dot_prod_base   @7
 gf_vect_mul_base        @8
 ec_encode_data_base     @9

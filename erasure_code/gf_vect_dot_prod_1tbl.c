@@ -78,7 +78,7 @@ void mk_gf_mul_table(u8 * table)
 	int i, j;
 	for (i = 0; i < 256; i++)
 		for (j = 0; j < 256; j++)
-			table[i * 256 + j] = gf_mul(i, j);
+			table[i * 256 + j] = gf_mul_isal(i, j);
 }
 
 void gf_vect_dot_prod_ref(int len, int vlen, u8 * v, u8 ** src, u8 * dest)
@@ -88,7 +88,7 @@ void gf_vect_dot_prod_ref(int len, int vlen, u8 * v, u8 ** src, u8 * dest)
 	for (i = 0; i < len; i++) {
 		s = 0;
 		for (j = 0; j < vlen; j++)
-			s ^= gf_mul(src[j][i], v[j]);
+			s ^= gf_mul_isal(src[j][i], v[j]);
 
 		dest[i] = s;
 	}
